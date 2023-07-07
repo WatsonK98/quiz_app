@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'loading.dart';
 
 void main() async => runApp(const MyApp());
 
@@ -85,6 +88,14 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                       //Validate here
                       var username = values['username'];
                       var password = values['password'];
+                      dynamic jsonResponse = validateLogin(username, password);
+                      if(jsonResponse['response'] == true){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    loading()));
+                      }
                     }
                   },
                   child: const Text('Log In'),
@@ -107,5 +118,12 @@ class _QuizAppLogin extends State<QuizAppLogin> {
         ],
       ),
     );
+  }
+
+  Future validateLogin(var username, var password) async{
+    var url = 'https://www.cs.utep.edu/cheon/cs4381/homework/quiz/login.php?user=$username&pin=$username';
+    var response = await http.get(Uri.parse(url));
+    var decoded = json.decode(response.body);
+    return Future.delayed(const Duration(milliseconds: 50), () => decoded);
   }
 }
