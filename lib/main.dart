@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'loading.dart';
+
+import 'package:quiz_me/loading.dart';
 
 void main() async => runApp(const MyApp());
 
@@ -94,7 +95,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    loading()));
+                                    const Loading()));
                       }
                     }
                   },
