@@ -82,7 +82,9 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                 ElevatedButton(
                   onPressed: (){
                     if(Form.of(context).validate()){
-                      Text('$values');
+                      //Validate here
+                      var username = values['username'];
+                      var password = values['password'];
                     }
                   },
                   child: const Text('Log In'),
