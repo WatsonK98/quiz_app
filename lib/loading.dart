@@ -5,10 +5,29 @@ class Loading extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('loading'),
+    return MaterialApp(
+      title: 'Loading Page',
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.lightGreen,
+          title: const Text('Loading...'),
+        ),
+        body: const QuizAppLoading(),
       ),
     );
+  }
+}
+
+class QuizAppLoading extends StatefulWidget {
+  const QuizAppLoading({super.key});
+
+  @override
+  State<QuizAppLoading> createState() => _QuizAppLoading();
+}
+
+class _QuizAppLoading extends State<QuizAppLoading>{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold();
   }
 }
