@@ -28,6 +28,8 @@ class QuizAppLoading extends StatefulWidget {
 class _QuizAppLoading extends State<QuizAppLoading>{
   @override
   Widget build(BuildContext context){
-    return Scaffold();
+    return Scaffold(
+
+    );
   }
 }
