@@ -1,21 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:quiz_me/WebClient.dart';
 import 'loading.dart';
 
-void main() async {
-  HttpOverrides.global = MyHttpOverrides();
-  runApp(const MyApp());
-}
-
-class MyHttpOverrides extends HttpOverrides{
-  @override
-  HttpClient createHttpClient(SecurityContext? context){
-    return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
-  }
-}
+void main() async => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -95,33 +82,20 @@ class _QuizAppLogin extends State<QuizAppLogin> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: (){
                     if(Form.of(context).validate()){
-                      validateLogin(values['username'], values['password']).then((jsonResponse){
-                        if(jsonResponse['response']){
-                          Navigator.push(
-                              context, MaterialPageRoute(
-                              builder: (context) => Loading(values)));
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context){
-                                return AlertDialog(
-                                  title: const Text('Login Failed'),
-                                  content: const Text('Invalid username or password'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: (){
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              }
-                          );
-                        }
-                      });
+                      //Validate here
+                      var username = values['username'];
+                      var password = values['password'];
+                      var url = 'https://www.cs.utep.edu/cheon/cs4381/homework/quiz/login.php?user=$username&pin=$password';
+                      dynamic jsonResponse = WebClient(url).validateLogin();
+                      if(jsonResponse['response'] == true){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Loading(values)));
+                      }
                     }
                   },
                   child: const Text('Log In'),
@@ -144,12 +118,5 @@ class _QuizAppLogin extends State<QuizAppLogin> {
         ],
       ),
     );
-  }
-
-  Future validateLogin(var username, var password) async{
-    var url = 'https://www.cs.utep.edu/cheon/cs4381/homework/quiz/login.php?user=$username&pin=$password';
-    var response = await http.get(Uri.parse(url));
-    var decoded = json.decode(response.body);
-    return Future.delayed(const Duration(milliseconds: 50), () => decoded);
   }
 }
