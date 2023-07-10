@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:quiz_me/loading.dart';
+import 'loading.dart';
 
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
@@ -99,8 +99,9 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                     if(Form.of(context).validate()){
                       validateLogin(values['username'], values['password']).then((jsonResponse){
                         if(jsonResponse['response']){
-                          Navigator.push( context,
-                            MaterialPageRoute(builder: (context) => const Loading()),);
+                          Navigator.push(
+                              context, MaterialPageRoute(
+                              builder: (context) => Loading(values)));
                         } else {
                           showDialog(
                               context: context,

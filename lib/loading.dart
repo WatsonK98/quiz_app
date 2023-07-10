@@ -1,35 +1,22 @@
 import 'package:flutter/material.dart';
 
 class Loading extends StatelessWidget{
-  const Loading({super.key});
+  final dynamic values;
 
-  @override
-  Widget build(BuildContext context){
-    return MaterialApp(
-      title: 'Loading Page',
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.lightGreen,
-          title: const Text('Loading...'),
-        ),
-        body: const QuizAppLoading(),
-      ),
-    );
-  }
-}
+  const Loading (this.values, {super.key});
 
-class QuizAppLoading extends StatefulWidget {
-  const QuizAppLoading({super.key});
-
-  @override
-  State<QuizAppLoading> createState() => _QuizAppLoading();
-}
-
-class _QuizAppLoading extends State<QuizAppLoading>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-
+      appBar: AppBar(
+        backgroundColor: Colors.lightGreen,
+        title: const Text('Loading...'),
+      ),
+      body: Center(
+        child: Text(
+          '${values['password']}',
+        ),
+      ),
     );
   }
 }
