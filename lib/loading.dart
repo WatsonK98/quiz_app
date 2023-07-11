@@ -25,34 +25,3 @@ class Loading extends StatelessWidget{
     );
   }
 }
-
-class LoadingQuizzes extends StatefulWidget{
-  const LoadingQuizzes({super.key});
-
-  @override
-  _LoadingQuizzes createState() => _LoadingQuizzes();
-}
-
-class _LoadingQuizzes extends State<LoadingQuizzes>{
-
-  Future fetchResponses() async {}
-
-
-  @override
-  Widget build(BuildContext context){
-    return FutureBuilder(
-        future: fetchResponses(),
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-          var response = snapshot.data!;
-          return Text('$response');
-        },
-    );
-  }
-
-  Future validateLogin(var username, var password) async{
-    var url = 'https://www.cs.utep.edu/cheon/cs4381/homework/quiz/login.php?user=$username&pin=$password';
-    var response = await http.get(Uri.parse(url));
-    var decoded = json.decode(response.body);
-    return Future.delayed(const Duration(milliseconds: 50), () => decoded);
-  }
-}
