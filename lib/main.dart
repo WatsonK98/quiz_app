@@ -127,7 +127,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
     );
   }
 
-  Future validateLogin(var username, var password) async{
+  Future<dynamic> validateLogin(var username, var password) async{
     var url = 'https://www.cs.utep.edu/cheon/cs4381/homework/quiz/login.php?user=$username&pin=$password';
     var response = await http.get(Uri.parse(url));
     var decoded = json.decode(response.body);
