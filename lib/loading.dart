@@ -14,11 +14,16 @@ class Loading extends StatelessWidget{
         backgroundColor: Colors.lightGreen,
         title: const Text('Quiz Zap!'),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-
+            FutureBuilder<dynamic>(
+                future: ,
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
+                  return Text('$response');
+                }
+            ),
           ],
         ),
       ),
