@@ -10,11 +10,14 @@ class Loading extends StatelessWidget{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
-        title: const Text('Loading...'),
+        title: const Text('Quiz Zap!'),
       ),
-      body: Center(
-        child: Text(
-          '${values['password']}',
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+
+          ],
         ),
       ),
     );
