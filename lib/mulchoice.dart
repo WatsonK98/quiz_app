@@ -9,10 +9,11 @@ class MulChoice extends question {
   ///Prints the question
   @override
   String display() {
-    print(stem);
+    String stemFormat = stem;
     for (int i = 0; i < options.length; i++) {
-      print('   ${i + 1}. ${options[i]}');
+      stemFormat += '\n   ${i + 1}. ${options[i]}';
     }
+    return stemFormat;
   }
 
   ///Checks the answer
