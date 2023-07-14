@@ -1,14 +1,14 @@
 import 'question.dart';
 
-class mulchoice extends question {
+class MulChoice extends question {
   List<dynamic> options;
 
-  mulchoice(var type, var stem, var answer, this.options)
+  MulChoice(var type, var stem, var answer, this.options)
       : super(type, stem, answer);
 
   ///Prints the question
   @override
-  void display() {
+  String display() {
     print(stem);
     for (int i = 0; i < options.length; i++) {
       print('   ${i + 1}. ${options[i]}');

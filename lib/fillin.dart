@@ -5,8 +5,8 @@ class FillIn extends question {
 
   ///Prints the question
   @override
-  void display() {
-    print(stem);
+  String display() {
+    return stem;
   }
 
   ///Checks to see if answer is correct

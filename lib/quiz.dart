@@ -7,7 +7,7 @@ class quiz {
   List<question> questions = [];
 
   ///Loads Multiple Choice questions to the Quiz database
-  void loadMulChoice(mulchoice parsed) {
+  void loadMulChoice(MulChoice parsed) {
     questions.add(parsed);
   }
 
