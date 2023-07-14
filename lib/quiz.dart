@@ -3,7 +3,7 @@ import 'fillin.dart';
 import 'mulchoice.dart';
 import 'dart:math';
 
-class quiz {
+class Quiz {
   List<question> questions = [];
 
   ///Loads Multiple Choice questions to the Quiz database
