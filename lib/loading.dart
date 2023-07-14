@@ -36,7 +36,7 @@ class Loading extends StatelessWidget{
                     response = loadQuiz(values['username'], values['password'], quiz);
                   }
                   return Text(
-                      '$quiz quizzes found\nLoading Quizzes...',
+                      '$quiz Quizzes found',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),);
                 }
                 return const Text('No quizzes found');
