@@ -100,8 +100,25 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                               builder: (context) => Loading(values),
                             ),
                           );
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context){
+                                return AlertDialog(
+                                  title: const Text('Login Failed'),
+                                  content: const Text('Invalid Username or Password'),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: (){
+                                        Navigator.pop(context);
+                                        },
+                                      child: const Text('Retry'),
+                                    ),
+                                  ],
+                                );
+                              }
+                          );
                         }
-                        //Add in a popup here
                       });
                     }
                   },
