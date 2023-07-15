@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'questionparser.dart';
 import 'quiz.dart';
+import 'userdefine.dart';
 
 var currentQuestion;
 var parser = QuestionParser();
@@ -47,7 +48,12 @@ class Loading extends StatelessWidget{
 
                 if (snapshot.hasData) {
                   Timer(const Duration(seconds: 3), () {
-                    //Navigate to next page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Userdefine(values, finalQuiz),
+                      ),
+                    );
                   });
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
