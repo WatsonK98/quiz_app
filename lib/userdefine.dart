@@ -67,11 +67,10 @@ class _Define extends State<Define>{
               return Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    if(value['user'] > 0 && value['user'] < 15){
-                      //create a userQuiz
-                      var userQuiz = finalQuiz.generateQuiz(value['user']);
+                    int userVariable = int.parse(value['user']);
+                    if(userVariable > 0 && userVariable < 15){
+                      var userQuiz = finalQuiz.generateQuiz(userVariable);
                     } else {
-                      //create defaultQuiz
                       var defaultQuiz = finalQuiz.generateQuiz(10);
                     }
                   },
