@@ -46,7 +46,9 @@ class Loading extends StatelessWidget{
                 }
 
                 if (snapshot.hasData) {
-
+                  Timer(const Duration(seconds: 3), () {
+                    //Navigate to next page
+                  });
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
