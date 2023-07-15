@@ -4,7 +4,7 @@ import 'mulchoice.dart';
 import 'dart:math';
 
 class Quiz {
-  List<question> questions = [];
+  List<Question> questions = [];
 
   ///Loads Multiple Choice questions to the Quiz database
   void loadMulChoice(MulChoice parsed) {
@@ -22,7 +22,7 @@ class Quiz {
       return;
     }
 
-    List<question> newQuiz = [];
+    List<Question> newQuiz = [];
 
     while (newQuiz.length < range) {
       var random = Random().nextInt(questions.length);

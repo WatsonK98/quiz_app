@@ -1,9 +1,9 @@
-abstract class question {
+abstract class Question {
   var type;
   var stem;
   var answer;
 
-  question(this.type, this.stem, this.answer);
+  Question(this.type, this.stem, this.answer);
 
   void display();
   bool checkAnswer(var userIn);

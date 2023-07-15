@@ -1,6 +1,6 @@
 import 'question.dart';
 
-class MulChoice extends question {
+class MulChoice extends Question {
   List<dynamic> options;
 
   MulChoice(var type, var stem, var answer, this.options)

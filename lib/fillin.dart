@@ -1,6 +1,6 @@
 import 'question.dart';
 
-class FillIn extends question {
+class FillIn extends Question {
   FillIn(var type, var stem, var answer) : super(type, stem, answer);
 
   ///Prints the question

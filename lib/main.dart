@@ -6,11 +6,11 @@ import 'dart:convert';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const MyApp());
+  runApp(const Login());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Login extends StatelessWidget {
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
