@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'questionparser.dart';
-import 'quiz.dart';
 
 class Loading extends StatelessWidget{
   final dynamic values;
@@ -28,24 +26,11 @@ class Loading extends StatelessWidget{
                 }
 
                 if (snapshot.hasData) {
-                  var parser = QuestionParser();
-                  var finalQuiz = Quiz();
-                  var currentQuestion;
-                  var parsed;
                   var quiz = '01';
                   dynamic response = snapshot.data['response'];
 
                   while (response == true) {
-                    for (int i = 0; i < response['quiz']['question'].length; i++) {
-                      currentQuestion = response['quiz']['question'][i];
-                      if (currentQuestion['type'] == 1) {
-                        parsed = parser.parseMulChoice(currentQuestion);
-                        finalQuiz.loadMulChoice(parsed);
-                      } else if (currentQuestion['type'] == 2) {
-                        parsed = parser.parseFillIn(currentQuestion);
-                        finalQuiz.loadFillIn(parsed);
-                      }
-                    }
+
                     int currentNumber = int.parse(quiz);
                     currentNumber++;
                     quiz = currentNumber < 10 ? '0$currentNumber' : '$currentNumber';
