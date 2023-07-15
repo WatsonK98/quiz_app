@@ -1,5 +1,5 @@
-import 'FillIn.dart';
-import 'MulChoice.dart';
+import 'fillin.dart';
+import 'mulchoice.dart';
 
 class QuestionParser {
   var question;

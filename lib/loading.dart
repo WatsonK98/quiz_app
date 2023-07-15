@@ -1,6 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'questionparser.dart';
+import 'quiz.dart';
+
+var currentQuestion;
+var parser = QuestionParser();
+var finalQuiz = Quiz();
+var parsed;
+int currentNumber = 0;
 
 class Loading extends StatelessWidget{
   final dynamic values;
@@ -22,23 +31,37 @@ class Loading extends StatelessWidget{
               future: loadQuiz(values['username'], values['password'], '01'),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator(
+                        color: Colors.green,
+                      ),
+                      Text(
+                        'Loading Quizzes',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
+                    ],
+                  );
                 }
 
                 if (snapshot.hasData) {
-                  var quiz = '01';
-                  dynamic response = snapshot.data['response'];
 
-                  while (response == true) {
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                          size: 60,
+                        ),
+                        Text(
+                          '${snapshot.data} Quizzes found',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                        ),
 
-                    int currentNumber = int.parse(quiz);
-                    currentNumber++;
-                    quiz = currentNumber < 10 ? '0$currentNumber' : '$currentNumber';
-                    response = loadQuiz(values['username'], values['password'], quiz);
-                  }
-                  return Text(
-                      '$quiz Quizzes found',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),);
+                      ],
+                  );
                 }
                 return const Text('No quizzes found');
               },
@@ -49,10 +72,28 @@ class Loading extends StatelessWidget{
     );
   }
 
-  Future<dynamic> loadQuiz(var username, var password, var quiz) async{
-    var url = 'https://www.cs.utep.edu/cheon/cs4381/homework/quiz/login.php?user=$username&pin=$password&quiz=quiz$quiz';
-    var response = await http.get(Uri.parse(url));
+  Future loadQuiz(var username, var password, var quiz) async{
+    var response = await http.get(Uri.parse('https://www.cs.utep.edu/cheon/cs4381/homework/quiz/get.php?user=$username&pin=$password&quiz=quiz$quiz'));
     var decoded = json.decode(response.body);
-    return Future.delayed(const Duration(milliseconds: 50), () => decoded);
+
+    while (decoded['response'] == true) {
+      for (int i = 0; i < decoded['quiz']['question'].length; i++) {
+        currentQuestion = decoded['quiz']['question'][i];
+        if (currentQuestion['type'] == 1) {
+          parsed = parser.parseMulChoice(currentQuestion);
+          finalQuiz.loadMulChoice(parsed);
+        } else if (currentQuestion['type'] == 2) {
+          parsed = parser.parseFillIn(currentQuestion);
+          finalQuiz.loadFillIn(parsed);
+        }
+      }
+
+      currentNumber = int.parse(quiz);
+      currentNumber++;
+      quiz = currentNumber < 10 ? '0$currentNumber' : '$currentNumber';
+      response = await http.get(Uri.parse('https://www.cs.utep.edu/cheon/cs4381/homework/quiz/get.php?user=$username&pin=$password&quiz=quiz$quiz'));
+      decoded = json.decode(response.body);
+    }
+    return currentNumber-1;
   }
 }
