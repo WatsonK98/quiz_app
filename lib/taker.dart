@@ -21,26 +21,64 @@ class Taker extends StatelessWidget{
           backgroundColor: Colors.lightGreen,
           title: const Text('Quiz Builder'),
         ),
-        body: ListView.builder(
-          itemCount: randomQuiz.length,
-          itemBuilder: (BuildContext context, int index){
-            final item = randomQuiz[index];
-
-            if(item is MulChoice){
-              return askMulChoice(item);
-            } else if (item is FillIn){
-              return askFillIn(item);
-            }
-          },
-        ),
+        body: const QuizScreen(),
       ),
     );
   }
+}
 
-  Widget askMulChoice(MulChoice item){
-    return Text('${item.display()}');
+class QuizScreen extends StatefulWidget {
+  const QuizScreen({super.key});
+
+  @override
+  _QuizScreenState createState() => _QuizScreenState();
+}
+
+class _QuizScreenState extends State<QuizScreen> {
+  int currentQuestionIndex = 0;
+
+  void goToNextQuestion() {
+    setState(() {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+      } else {
+        // Handle end of the quiz
+      }
+    });
   }
-  Widget askFillIn(FillIn item){
-    return Text('${item.display()}');
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(currentQuestion.stem),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: currentQuestion.options.length,
+              itemBuilder: (BuildContext context, int index) {
+                final option = currentQuestion.options[index];
+
+                return CheckboxListTile(
+                  checkColor: Colors.green,
+                  title: Text(option),
+                  value: false, // Change this to the appropriate value
+                  onChanged: (bool? value) {
+                    // Add your logic here
+                  },
+                );
+              },
+            ),
+            ElevatedButton(
+              onPressed: goToNextQuestion,
+              child: const Text('Next'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
