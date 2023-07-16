@@ -1,16 +1,27 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'loading.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final username = prefs.getString('username') ?? '';
+  final password = prefs.getString('password') ?? '';
+
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const Login());
+
+  runApp(Login(username: username, password: password));
 }
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  final String username;
+  final String password;
+
+  const Login({Key? key, this.username = '', this.password = ''}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +36,7 @@ class Login extends StatelessWidget {
           backgroundColor: Colors.lightGreen,
           title: const Text('Quiz App Login'),
         ),
-        body: const QuizAppLogin(),
+        body: QuizAppLogin(initialUsername: username, initialPassword: password),
 
       ),
     );
@@ -33,7 +44,10 @@ class Login extends StatelessWidget {
 }
 
 class QuizAppLogin extends StatefulWidget {
-  const QuizAppLogin({super.key});
+  final String initialUsername;
+  final String initialPassword;
+
+  const QuizAppLogin({Key? key, this.initialUsername = '', this.initialPassword = ''}) : super(key: key);
 
   @override
   State<QuizAppLogin> createState() => _QuizAppLogin();
@@ -51,6 +65,12 @@ class _QuizAppLogin extends State<QuizAppLogin> {
     'password': _passwordFormFieldKey.currentState?.value
   };
 
+  Future<void> saveCredentials(String username, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('password', password);
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -70,6 +90,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
             decoration: const InputDecoration(
               labelText: 'Username*',
             ),
+            initialValue: widget.initialUsername,
             validator: (value) =>
             _notEmpty(value!) ? null : 'Username is required',
           ),
@@ -79,6 +100,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
             decoration:  const InputDecoration(
               labelText: 'Password**',
             ),
+            initialValue: widget.initialPassword,
             validator: (value) =>
             _notEmpty(value!) ? null : 'Password is required',
           ),
@@ -90,10 +112,12 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                   onPressed: () async {
                     if(Form.of(context).validate()){
                       //Validate here
+                      
                       var username = values['username'];
                       var password = values['password'];
                       validateLogin(username, password).then((jsonResponse) {
                         if (jsonResponse['response'] == true) {
+                          saveCredentials(username, password);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
