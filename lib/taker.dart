@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_me/mulchoice.dart';
+import 'package:quiz_me/fillin.dart';
+
 
 class Taker extends StatelessWidget{
   final dynamic randomQuiz;
@@ -18,7 +21,26 @@ class Taker extends StatelessWidget{
           backgroundColor: Colors.lightGreen,
           title: const Text('Quiz Builder'),
         ),
+        body: ListView.builder(
+          itemCount: randomQuiz.length,
+          itemBuilder: (BuildContext context, int index){
+            final item = randomQuiz[index];
+
+            if(item is MulChoice){
+              return askMulChoice(item);
+            } else if (item is FillIn){
+              return askFillIn(item);
+            }
+          },
+        ),
       ),
     );
+  }
+
+  Widget askMulChoice(MulChoice item){
+    return Text('${item.display()}');
+  }
+  Widget askFillIn(FillIn item){
+    return Text('${item.display()}');
   }
 }
