@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_me/loading.dart';
+import 'loading.dart';
+import 'taker.dart';
 
 class Userdefine extends StatelessWidget{
-  final dynamic values;
   final dynamic finalQuiz;
 
-  const Userdefine(this.values, this.finalQuiz, {super.key});
+  const Userdefine(this.finalQuiz, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +20,16 @@ class Userdefine extends StatelessWidget{
           backgroundColor: Colors.lightGreen,
           title: const Text('Quiz Builder'),
         ),
-        body: Define(values, finalQuiz),
+        body: Define(finalQuiz),
       ),
     );
   }
 }
 
 class Define extends StatefulWidget{
-  final dynamic values;
   final dynamic finalQuiz;
 
-  const Define(this.values, this.finalQuiz, {super.key});
+  const Define(this.finalQuiz, {super.key});
 
   @override
   State<Define> createState() => _Define();
@@ -68,13 +67,20 @@ class _Define extends State<Define>{
                 child: ElevatedButton(
                   onPressed: () {
                     int userVariable = int.parse(value['user']);
+                    var randomQuiz;
                     if(userVariable > 0 && userVariable < 15){
-                      var userQuiz = finalQuiz.generateQuiz(userVariable);
+                      randomQuiz = finalQuiz.generateQuiz(userVariable);
                     } else {
-                      var defaultQuiz = finalQuiz.generateQuiz(10);
+                      randomQuiz = finalQuiz.generateQuiz(10);
                     }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Taker(randomQuiz),
+                      ),
+                    );
                   },
-                  child: const Text('Accept'),
+                  child: const Text('Generate'),
                 ),
               );
             }),

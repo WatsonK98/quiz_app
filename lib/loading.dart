@@ -51,7 +51,7 @@ class Loading extends StatelessWidget{
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Userdefine(values, finalQuiz),
+                        builder: (context) => Userdefine(finalQuiz),
                       ),
                     );
                   });
