@@ -47,7 +47,7 @@ class Loading extends StatelessWidget{
                 }
 
                 if (snapshot.hasData) {
-                  Timer(const Duration(seconds: 3), () {
+                  Timer(const Duration(seconds: 2), () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -19,65 +19,123 @@ class Taker extends StatelessWidget{
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.lightGreen,
-          title: const Text('Quiz Builder'),
+          title: const Text('Quiz'),
         ),
-        body: const QuizScreen(),
+        body: QuizScreen(randomQuiz: randomQuiz),
       ),
     );
   }
 }
 
-class QuizScreen extends StatefulWidget {
-  const QuizScreen({super.key});
+class QuizScreen extends StatefulWidget{
+  final dynamic randomQuiz;
+
+  const QuizScreen({super.key, required this.randomQuiz});
 
   @override
   _QuizScreenState createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen> {
-  int currentQuestionIndex = 0;
+class _QuizScreenState extends State<QuizScreen>{
+  int currentIndex = 0;
+  int correctAnswer = 0;
+  String? selectedOption;
 
-  void goToNextQuestion() {
-    setState(() {
-      if (currentQuestionIndex < questions.length - 1) {
-        currentQuestionIndex++;
-      } else {
-        // Handle end of the quiz
-      }
-    });
+  Widget buildQuestion(){
+    final currentQuestion = widget.randomQuiz[currentIndex];
+
+    if(currentQuestion is MulChoice){
+      return Column(
+        children: [
+          Text(
+            currentQuestion.stem,
+            style: const TextStyle(fontSize: 16)
+          ),
+          const SizedBox(height: 16),
+          Column(
+            children: (currentQuestion.options).map((option) {
+              return CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                title: Text(option),
+                value: option == selectedOption,
+                onChanged: (bool? value) {
+                  setState(() {
+                    selectedOption = value == true ? option : null;
+                  });
+                },
+              );
+            }).toList(),
+          ),
+        ],
+      );
+    } else if(currentQuestion is FillIn){
+      return Column(
+        children: [
+          Text(
+            currentQuestion.stem,
+            style: const TextStyle(fontSize: 16.0),
+          ),
+          const SizedBox(height: 16.0),
+          TextField(
+            onChanged: (value) {
+              // Handle user input here if needed
+            },
+            decoration: const InputDecoration(
+              hintText: 'Answer',
+            ),
+          ),
+        ],
+      );
+    } else {
+      return const Text('Question display error');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(currentQuestion.stem),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: currentQuestion.options.length,
-              itemBuilder: (BuildContext context, int index) {
-                final option = currentQuestion.options[index];
-
-                return CheckboxListTile(
-                  checkColor: Colors.green,
-                  title: Text(option),
-                  value: false, // Change this to the appropriate value
-                  onChanged: (bool? value) {
-                    // Add your logic here
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Question ${currentIndex + 1}',
+            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8.0),
+          buildQuestion(),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (currentIndex > 0)
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      currentIndex--;
+                    });
                   },
-                );
-              },
-            ),
-            ElevatedButton(
-              onPressed: goToNextQuestion,
-              child: const Text('Next'),
-            ),
-          ],
-        ),
+                  child: const Text('Previous'),
+                ),
+              if (currentIndex < widget.randomQuiz.length - 1)
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      currentIndex++;
+                    });
+                  },
+                  child: const Text('Next'),
+                ),
+              if (currentIndex == widget.randomQuiz.length - 1)
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle end of quiz here
+                  },
+                  child: const Text('End Quiz'),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
