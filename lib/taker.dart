@@ -37,9 +37,11 @@ class QuizScreen extends StatefulWidget{
 }
 
 class _QuizScreenState extends State<QuizScreen>{
+  dynamic wrongQuestions;
   int currentIndex = 0;
   int correctAnswer = 0;
   String? selectedOption;
+  String? filledAnswer;
 
   Widget buildQuestion(){
     final currentQuestion = widget.randomQuiz[currentIndex];
@@ -60,7 +62,18 @@ class _QuizScreenState extends State<QuizScreen>{
                 value: option == selectedOption,
                 onChanged: (bool? value) {
                   setState(() {
-                    selectedOption = value == true ? option : null;
+                    if (value == true) {
+                      if (currentQuestion.checkAnswer(value)) {
+                        correctAnswer++; // Increase the count of correct answers
+                      } else {
+                        if(correctAnswer > 0){
+                          correctAnswer--;
+                        } // Decrease the count of correct answers
+                      }
+                      selectedOption = option;
+                    } else {
+                      selectedOption = null;
+                    }
                   });
                 },
               );
@@ -78,7 +91,14 @@ class _QuizScreenState extends State<QuizScreen>{
           const SizedBox(height: 16.0),
           TextField(
             onChanged: (value) {
-              // Handle user input here if needed
+              filledAnswer = value;
+              if (currentQuestion.checkAnswer(value)) {
+                correctAnswer++; // Increase the count of correct answers
+              } else {
+                if(correctAnswer > 0){
+                  correctAnswer--;
+                }// Decrease the count of correct answers
+              }
             },
             decoration: const InputDecoration(
               hintText: 'Answer',
@@ -129,7 +149,7 @@ class _QuizScreenState extends State<QuizScreen>{
               if (currentIndex == widget.randomQuiz.length - 1)
                 ElevatedButton(
                   onPressed: () {
-                    // Handle end of quiz here
+                    double grade = (correctAnswer / widget.randomQuiz.length) * 100;
                   },
                   child: const Text('End Quiz'),
                 ),
