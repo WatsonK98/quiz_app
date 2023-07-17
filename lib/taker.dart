@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_me/mulchoice.dart';
 import 'package:quiz_me/fillin.dart';
+import 'package:quiz_me/gradedquiz.dart';
 
 
 class Taker extends StatelessWidget{
@@ -10,19 +11,12 @@ class Taker extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'User',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.lightGreen,
+        title: const Text('Quiz'),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.lightGreen,
-          title: const Text('Quiz'),
-        ),
-        body: QuizScreen(randomQuiz: randomQuiz),
-      ),
+      body: QuizScreen(randomQuiz: randomQuiz),
     );
   }
 }
@@ -33,46 +27,51 @@ class QuizScreen extends StatefulWidget{
   const QuizScreen({super.key, required this.randomQuiz});
 
   @override
-  _QuizScreenState createState() => _QuizScreenState();
+  State<QuizScreen> createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen>{
-  dynamic wrongQuestions;
+class _QuizScreenState extends State<QuizScreen> {
   int currentIndex = 0;
   int correctAnswer = 0;
-  String? selectedOption;
-  String? filledAnswer;
+  bool isChecked = false;
+  String filledAnswer = '';
+  List<dynamic> wrongQuestions = [];
 
-  Widget buildQuestion(){
+  Widget buildQuestion() {
     final currentQuestion = widget.randomQuiz[currentIndex];
 
-    if(currentQuestion is MulChoice){
+    if (currentQuestion is MulChoice) {
       return Column(
         children: [
           Text(
             currentQuestion.stem,
-            style: const TextStyle(fontSize: 16)
+            style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 16),
           Column(
-            children: (currentQuestion.options).map((option) {
+            children: currentQuestion.options.map((option) {
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 title: Text(option),
-                value: option == selectedOption,
+                value: isChecked && option == filledAnswer,
                 onChanged: (bool? value) {
                   setState(() {
-                    if (value == true) {
-                      if (currentQuestion.checkAnswer(value)) {
+                    isChecked = value ?? false;
+                    if (isChecked) {
+                      filledAnswer = option;
+                      if (currentQuestion.checkAnswer(option)) {
+                        wrongQuestions.remove(currentQuestion);
                         correctAnswer++; // Increase the count of correct answers
                       } else {
-                        if(correctAnswer > 0){
-                          correctAnswer--;
-                        } // Decrease the count of correct answers
+                        if (!wrongQuestions.contains(currentQuestion)) {
+                          wrongQuestions.add(currentQuestion);
+                        }
                       }
-                      selectedOption = option;
                     } else {
-                      selectedOption = null;
+                      filledAnswer = '';
+                      if (currentQuestion.checkAnswer(option)) {
+                        correctAnswer--; // Decrease the count of correct answers
+                      }
                     }
                   });
                 },
@@ -81,7 +80,7 @@ class _QuizScreenState extends State<QuizScreen>{
           ),
         ],
       );
-    } else if(currentQuestion is FillIn){
+    } else if (currentQuestion is FillIn) {
       return Column(
         children: [
           Text(
@@ -91,17 +90,22 @@ class _QuizScreenState extends State<QuizScreen>{
           const SizedBox(height: 16.0),
           TextField(
             onChanged: (value) {
-              filledAnswer = value;
-              if (currentQuestion.checkAnswer(value)) {
-                correctAnswer++; // Increase the count of correct answers
-              } else {
-                if(correctAnswer > 0){
-                  correctAnswer--;
-                }// Decrease the count of correct answers
-              }
+              setState(() {
+                filledAnswer = value;
+                if (currentQuestion.checkAnswer(value)) {
+                  wrongQuestions.remove(currentQuestion);
+                  correctAnswer++; // Increase the count of correct answers
+                } else {
+                  if (!wrongQuestions.contains(currentQuestion)) {
+                    wrongQuestions.add(currentQuestion);
+                  }
+                }
+              });
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Answer',
+              filled: true,
+              fillColor: Colors.grey[200],
             ),
           ),
         ],
@@ -149,7 +153,7 @@ class _QuizScreenState extends State<QuizScreen>{
               if (currentIndex == widget.randomQuiz.length - 1)
                 ElevatedButton(
                   onPressed: () {
-                    double grade = (correctAnswer / widget.randomQuiz.length) * 100;
+                    print('$correctAnswer');
                   },
                   child: const Text('End Quiz'),
                 ),
