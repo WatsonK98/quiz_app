@@ -74,97 +74,100 @@ class _QuizAppLogin extends State<QuizAppLogin> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'CS 5381',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-          ),
-          const Text(
-            'version 1.0.0',
-            style: TextStyle(fontSize: 10),
-          ),
-          TextFormField(
-            key: _usernameFormFieldKey,
-            decoration: const InputDecoration(
-              labelText: 'Username*',
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'CS 5381',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
             ),
-            initialValue: widget.initialUsername,
-            validator: (value) =>
-            _notEmpty(value!) ? null : 'Username is required',
-          ),
-          TextFormField(
-            key: _passwordFormFieldKey,
-            obscureText: true,
-            decoration:  const InputDecoration(
-              labelText: 'Password**',
+            const Text(
+              'version 1.0.0',
+              style: TextStyle(fontSize: 10),
             ),
-            initialValue: widget.initialPassword,
-            validator: (value) =>
-            _notEmpty(value!) ? null : 'Password is required',
-          ),
-          Builder(builder: (context){
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () async {
-                    if(Form.of(context).validate()){
-                      //Validate here
-                      
-                      var username = values['username'];
-                      var password = values['password'];
-                      validateLogin(username, password).then((jsonResponse) {
-                        if (jsonResponse['response'] == true) {
-                          saveCredentials(username, password);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Loading(values),
-                            ),
-                          );
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context){
-                                return AlertDialog(
-                                  title: const Text('Login Failed'),
-                                  content: const Text('Invalid Username or Password'),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: (){
-                                        Navigator.pop(context);
+            TextFormField(
+              key: _usernameFormFieldKey,
+              decoration: const InputDecoration(
+                labelText: 'Username*',
+              ),
+              initialValue: widget.initialUsername,
+              validator: (value) =>
+              _notEmpty(value!) ? null : 'Username is required',
+            ),
+            TextFormField(
+              key: _passwordFormFieldKey,
+              obscureText: true,
+              decoration:  const InputDecoration(
+                labelText: 'Password**',
+              ),
+              initialValue: widget.initialPassword,
+              validator: (value) =>
+              _notEmpty(value!) ? null : 'Password is required',
+            ),
+            Builder(builder: (context){
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () async {
+                      if(Form.of(context).validate()){
+                        //Validate here
+
+                        var username = values['username'];
+                        var password = values['password'];
+                        validateLogin(username, password).then((jsonResponse) {
+                          if (jsonResponse['response'] == true) {
+                            saveCredentials(username, password);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Loading(values),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    title: const Text('Login Failed'),
+                                    content: const Text('Invalid Username or Password'),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: (){
+                                          Navigator.pop(context);
                                         },
-                                      child: const Text('Retry'),
-                                    ),
-                                  ],
-                                );
-                              }
-                          );
-                        }
-                      });
-                    }
-                  },
-                  child: const Text('Log In'),
-                ),
-                TextButton(
-                  onPressed: () => Form.of(context).reset(),
-                  child: const Text('Reset'),
-                ),
-              ],
-            );
-          }),
-          const Text(
-            '*User name of your primary email address provided by UTEP.',
-            style: TextStyle(fontSize: 10),
-          ),
-          const Text(
-            '**Password is the last 4 digits of your Student ID.',
-            style: TextStyle(fontSize: 10),
-          ),
-        ],
-      ),
+                                        child: const Text('Retry'),
+                                      ),
+                                    ],
+                                  );
+                                }
+                            );
+                          }
+                        });
+                      }
+                    },
+                    child: const Text('Log In'),
+                  ),
+                  TextButton(
+                    onPressed: () => Form.of(context).reset(),
+                    child: const Text('Reset'),
+                  ),
+                ],
+              );
+            }),
+            const Text(
+              '*User name of your primary email address provided by UTEP.',
+              style: TextStyle(fontSize: 10),
+            ),
+            const Text(
+              '**Password is the last 4 digits of your Student ID.',
+              style: TextStyle(fontSize: 10),
+            ),
+          ],
+        ),
+      )
     );
   }
 

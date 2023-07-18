@@ -45,47 +45,50 @@ class _Define extends State<Define>{
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Enter desired Number of Questions',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const Text(
-              '1-15 [default: 10]',
-            ),
-            TextFormField(
-              key: _userFormFieldKey,
-              decoration:  const InputDecoration(
-                labelText: 'Desired Questions:',
-              ),
-            ),
-            Builder(builder: (context){
-              return Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    int userVariable = int.parse(value['user']);
-                    var randomQuiz;
-                    if(userVariable > 0 && userVariable < 15){
-                      randomQuiz = finalQuiz.generateQuiz(userVariable);
-                    } else {
-                      randomQuiz = finalQuiz.generateQuiz(10);
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Taker(randomQuiz),
-                      ),
-                    );
-                  },
-                  child: const Text('Generate'),
+    return Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Form(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Enter desired Number of Questions',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-              );
-            }),
-          ],
-        )
+                const Text(
+                  '1-15 [default: 10]',
+                ),
+                TextFormField(
+                  key: _userFormFieldKey,
+                  decoration:  const InputDecoration(
+                    labelText: 'Desired Questions:',
+                  ),
+                ),
+                Builder(builder: (context){
+                  return Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        int userVariable = int.parse(value['user']);
+                        var randomQuiz;
+                        if(userVariable > 0 && userVariable < 15){
+                          randomQuiz = finalQuiz.generateQuiz(userVariable);
+                        } else {
+                          randomQuiz = finalQuiz.generateQuiz(10);
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Taker(randomQuiz),
+                          ),
+                        );
+                      },
+                      child: const Text('Generate'),
+                    ),
+                  );
+                }),
+              ],
+          )
+        ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:quiz_me/question.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_me/mulchoice.dart';
 import 'package:quiz_me/fillin.dart';
@@ -34,16 +35,42 @@ class QuizScreen extends StatefulWidget{
 
 class _QuizScreenState extends State<QuizScreen> {
   int currentIndex = 0;
-  int correctAnswer = 0;
-  dynamic selectedOption;
-  List<dynamic> wrongQuestions = [];
+  int correctAnswers = 0;
+  String? selectedOption;
+  List<Question> wrongQuestions = [];
 
   Widget buildQuestion() {
     final currentQuestion = widget.randomQuiz[currentIndex];
 
-    if (currentQuestion is MulChoice) {
-      return ListView(
+    List<bool> selectedOptions = [];
 
+    @override
+    void initState() {
+      super.initState();
+      // Initialize the selectedOptions list with false values for each option
+      selectedOptions = List<bool>.filled(currentQuestion.options.length, false);
+    }
+
+    if (currentQuestion is MulChoice) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(currentQuestion.stem),
+          ListView.builder(
+            itemCount: currentQuestion.options.length,
+            itemBuilder: (context, index) {
+              return CheckboxListTile(
+                title: Text(currentQuestion.options[index]),
+                value: selectedOptions[index],
+                onChanged: (value) {
+                  setState(() {
+                    selectedOptions[index] = value!;
+                  });
+                },
+              );
+            },
+          )
+        ],
       );
     } else if (currentQuestion is FillIn) {
       return Column(
@@ -110,11 +137,11 @@ class _QuizScreenState extends State<QuizScreen> {
               if (currentIndex == widget.randomQuiz.length - 1)
                 ElevatedButton(
                   onPressed: () {
-                    print('$correctAnswer');
+                    print('$correctAnswers');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GradedQuiz(correctAnswer, wrongQuestions),
+                        builder: (context) => GradedQuiz(correctAnswers, wrongQuestions),
                       ),
                     );
                   },
