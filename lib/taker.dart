@@ -34,7 +34,6 @@ class _QuizScreenState extends State<QuizScreen> {
   int currentIndex = 0;
   int correctAnswer = 0;
   bool isChecked = false;
-  String filledAnswer = '';
   List<dynamic> wrongQuestions = [];
 
   Widget buildQuestion() {
@@ -53,26 +52,10 @@ class _QuizScreenState extends State<QuizScreen> {
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 title: Text(option),
-                value: isChecked && option == filledAnswer,
+                value: isChecked,
                 onChanged: (bool? value) {
                   setState(() {
                     isChecked = value ?? false;
-                    if (isChecked) {
-                      filledAnswer = option;
-                      if (currentQuestion.checkAnswer(option)) {
-                        wrongQuestions.remove(currentQuestion);
-                        correctAnswer++; // Increase the count of correct answers
-                      } else {
-                        if (!wrongQuestions.contains(currentQuestion)) {
-                          wrongQuestions.add(currentQuestion);
-                        }
-                      }
-                    } else {
-                      filledAnswer = '';
-                      if (currentQuestion.checkAnswer(option)) {
-                        correctAnswer--; // Decrease the count of correct answers
-                      }
-                    }
                   });
                 },
               );
@@ -91,15 +74,7 @@ class _QuizScreenState extends State<QuizScreen> {
           TextField(
             onChanged: (value) {
               setState(() {
-                filledAnswer = value;
-                if (currentQuestion.checkAnswer(value)) {
-                  wrongQuestions.remove(currentQuestion);
-                  correctAnswer++; // Increase the count of correct answers
-                } else {
-                  if (!wrongQuestions.contains(currentQuestion)) {
-                    wrongQuestions.add(currentQuestion);
-                  }
-                }
+
               });
             },
             decoration: InputDecoration(
