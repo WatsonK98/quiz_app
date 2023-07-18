@@ -153,7 +153,13 @@ class _QuizScreenState extends State<QuizScreen> {
               if (currentIndex == widget.randomQuiz.length - 1)
                 ElevatedButton(
                   onPressed: () {
-                    print('$correctAnswer');
+                    double grade = (correctAnswer / widget.randomQuiz.length) * 100;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GradedQuiz(grade, wrongQuestions),
+                      ),
+                    );
                   },
                   child: const Text('End Quiz'),
                 ),
