@@ -2,6 +2,7 @@ import 'question.dart';
 
 class MulChoice extends Question {
   List<dynamic> options;
+  var chosen = 0;
 
   MulChoice(var type, var stem, var answer, this.options)
       : super(type, stem, answer);

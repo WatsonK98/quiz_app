@@ -64,12 +64,13 @@ class _Define extends State<Define>{
                     labelText: 'Desired Questions:',
                   ),
                 ),
+                const SizedBox(height: 8.0,),
                 Builder(builder: (context){
                   return Center(
                     child: ElevatedButton(
                       onPressed: () {
                         int userVariable = int.parse(value['user']);
-                        var randomQuiz;
+                        dynamic randomQuiz;
                         if(userVariable > 0 && userVariable < 15){
                           randomQuiz = finalQuiz.generateQuiz(userVariable);
                         } else {

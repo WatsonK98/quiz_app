@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:highlight_text/highlight_text.dart';
-import 'package:quiz_me/loading.dart';
 
 class Review extends StatelessWidget{
   final dynamic wrongQuestions;
@@ -41,19 +39,14 @@ class _ReviewScreenState extends State<ReviewScreen>{
   @override
   Widget build(BuildContext context) {
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8.0),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
+          SizedBox(height: 8.0),
+          SizedBox(height: 16),
 
-            },
-            child: const Text('Go Back'),
-          ),
         ],
       ),
     );

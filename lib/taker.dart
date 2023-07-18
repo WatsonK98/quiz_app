@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:quiz_me/question.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_me/mulchoice.dart';
@@ -36,20 +34,10 @@ class QuizScreen extends StatefulWidget{
 class _QuizScreenState extends State<QuizScreen> {
   int currentIndex = 0;
   int correctAnswers = 0;
-  String? selectedOption;
   List<Question> wrongQuestions = [];
 
   Widget buildQuestion() {
     final currentQuestion = widget.randomQuiz[currentIndex];
-
-    List<bool> selectedOptions = [];
-
-    @override
-    void initState() {
-      super.initState();
-      // Initialize the selectedOptions list with false values for each option
-      selectedOptions = List<bool>.filled(currentQuestion.options.length, false);
-    }
 
     if (currentQuestion is MulChoice) {
       return Column(
@@ -57,19 +45,20 @@ class _QuizScreenState extends State<QuizScreen> {
         children: [
           Text(currentQuestion.stem),
           ListView.builder(
+            shrinkWrap: true,
             itemCount: currentQuestion.options.length,
             itemBuilder: (context, index) {
               return CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
                 title: Text(currentQuestion.options[index]),
-                value: selectedOptions[index],
+                value: false,
                 onChanged: (value) {
                   setState(() {
-                    selectedOptions[index] = value!;
                   });
                 },
               );
             },
-          )
+          ),
         ],
       );
     } else if (currentQuestion is FillIn) {
@@ -83,7 +72,7 @@ class _QuizScreenState extends State<QuizScreen> {
           TextField(
             onChanged: (value) {
               setState(() {
-                selectedOption = value;
+                value;
               });
             },
             decoration: InputDecoration(
@@ -137,11 +126,11 @@ class _QuizScreenState extends State<QuizScreen> {
               if (currentIndex == widget.randomQuiz.length - 1)
                 ElevatedButton(
                   onPressed: () {
-                    print('$correctAnswers');
+                    double grade = (correctAnswers / widget.randomQuiz.length) * 100;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GradedQuiz(correctAnswers, wrongQuestions),
+                        builder: (context) => GradedQuiz(grade, wrongQuestions),
                       ),
                     );
                   },
