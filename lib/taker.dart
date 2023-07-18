@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:quiz_me/mulchoice.dart';
 import 'package:quiz_me/fillin.dart';
@@ -40,43 +42,8 @@ class _QuizScreenState extends State<QuizScreen> {
     final currentQuestion = widget.randomQuiz[currentIndex];
 
     if (currentQuestion is MulChoice) {
-      return Column(
-        children: [
-          Text(
-            currentQuestion.stem,
-            style: const TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 16),
-          Column(
-            children: currentQuestion.options.map((option) {
-              return CheckboxListTile(
-                controlAffinity: ListTileControlAffinity.leading,
-                title: Text(option),
-                value: selectedOption == option,
-                onChanged: (bool? value) {
-                  if (value!) {
-                    setState(() {
-                      selectedOption = option;
-                      if (selectedOption == currentQuestion.answer && !wrongQuestions.contains(currentQuestion)) {
-                        correctAnswer++;
-                      } else if (selectedOption == currentQuestion.answer && wrongQuestions.contains(currentQuestion)) {
-                        correctAnswer++;
-                        wrongQuestions.remove(currentQuestion);
-                      } else if (selectedOption != currentQuestion.answer && !wrongQuestions.contains(option) && correctAnswer > 0) {
-                        correctAnswer--;
-                        wrongQuestions.add(currentQuestion);
-                      }
-                    });
-                  } else {
-                    setState(() {
-                      selectedOption = null;
-                    });
-                  }
-                },
-              );
-            }).toList(),
-          ),
-        ],
+      return ListView(
+
       );
     } else if (currentQuestion is FillIn) {
       return Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:highlight_text/highlight_text.dart';
+import 'package:quiz_me/loading.dart';
 
 class Review extends StatelessWidget{
   final dynamic wrongQuestions;
@@ -8,10 +9,19 @@ class Review extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightGreen,
-        title: const Text('Grade'),
+    return MaterialApp(
+      title: 'Review Screen',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.lightGreen,
+          title: const Text('Review'),
+        ),
+        body: ReviewScreen(wrongQuestions: wrongQuestions),
+
       ),
     );
   }
@@ -27,30 +37,22 @@ class ReviewScreen extends StatefulWidget{
 }
 
 class _ReviewScreenState extends State<ReviewScreen>{
-  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    final currentQuestion = widget.wrongQuestions[currentIndex];
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Question ${currentIndex + 1}',
-            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
           const SizedBox(height: 8.0),
-          Text(
-            currentQuestion.stem,
-            style: const TextStyle(fontSize: 16),
-          ),
           const SizedBox(height: 16),
-          TextHighlight(
-              text: currentQuestion.answer,
-              words: currentQuestion.answer,
+          ElevatedButton(
+            onPressed: () {
+
+            },
+            child: const Text('Go Back'),
           ),
         ],
       ),
