@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_me/review.dart';
 
 class GradedQuiz extends StatelessWidget{
-  final double grade;
+  final int grade;
   final dynamic wrongQuestions;
 
   const GradedQuiz(this.grade, this.wrongQuestions, {super.key});

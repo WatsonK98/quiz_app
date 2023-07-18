@@ -33,7 +33,7 @@ class QuizScreen extends StatefulWidget{
 class _QuizScreenState extends State<QuizScreen> {
   int currentIndex = 0;
   int correctAnswer = 0;
-  bool isChecked = false;
+  dynamic selectedOption;
   List<dynamic> wrongQuestions = [];
 
   Widget buildQuestion() {
@@ -52,11 +52,26 @@ class _QuizScreenState extends State<QuizScreen> {
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 title: Text(option),
-                value: isChecked,
+                value: selectedOption == option,
                 onChanged: (bool? value) {
-                  setState(() {
-                    isChecked = value ?? false;
-                  });
+                  if (value!) {
+                    setState(() {
+                      selectedOption = option;
+                      if (selectedOption == currentQuestion.answer && !wrongQuestions.contains(currentQuestion)) {
+                        correctAnswer++;
+                      } else if (selectedOption == currentQuestion.answer && wrongQuestions.contains(currentQuestion)) {
+                        correctAnswer++;
+                        wrongQuestions.remove(currentQuestion);
+                      } else if (selectedOption != currentQuestion.answer && !wrongQuestions.contains(option) && correctAnswer > 0) {
+                        correctAnswer--;
+                        wrongQuestions.add(currentQuestion);
+                      }
+                    });
+                  } else {
+                    setState(() {
+                      selectedOption = null;
+                    });
+                  }
                 },
               );
             }).toList(),
@@ -74,7 +89,7 @@ class _QuizScreenState extends State<QuizScreen> {
           TextField(
             onChanged: (value) {
               setState(() {
-
+                selectedOption = value;
               });
             },
             decoration: InputDecoration(
@@ -128,11 +143,11 @@ class _QuizScreenState extends State<QuizScreen> {
               if (currentIndex == widget.randomQuiz.length - 1)
                 ElevatedButton(
                   onPressed: () {
-                    double grade = (correctAnswer / widget.randomQuiz.length) * 100;
+                    print('$correctAnswer');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GradedQuiz(grade, wrongQuestions),
+                        builder: (context) => GradedQuiz(correctAnswer, wrongQuestions),
                       ),
                     );
                   },
