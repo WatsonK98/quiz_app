@@ -36,62 +36,10 @@ class _QuizScreenState extends State<QuizScreen> {
   int correctAnswers = 0;
   List<Question> wrongQuestions = [];
 
-  Widget buildQuestion() {
-    final currentQuestion = widget.randomQuiz[currentIndex];
-
-    if (currentQuestion is MulChoice) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(currentQuestion.stem,
-            style: const TextStyle(fontSize: 16.0),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: currentQuestion.options.length,
-            itemBuilder: (context, index) {
-              return CheckboxListTile(
-                controlAffinity: ListTileControlAffinity.leading,
-                title: Text(currentQuestion.options[index]),
-                value: false,
-                onChanged: (value) {
-                  setState(() {
-                  });
-                },
-              );
-            },
-          ),
-        ],
-      );
-    } else if (currentQuestion is FillIn) {
-      return Column(
-        children: [
-          Text(
-            currentQuestion.stem,
-            style: const TextStyle(fontSize: 16.0),
-          ),
-          const SizedBox(height: 16.0),
-          TextField(
-            onChanged: (value) {
-              setState(() {
-                value;
-              });
-            },
-            decoration: InputDecoration(
-              hintText: 'Answer',
-              filled: true,
-              fillColor: Colors.grey[200],
-            ),
-          ),
-        ],
-      );
-    } else {
-      return const Text('Question display error');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final currentQuestion = widget.randomQuiz[currentIndex];
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -102,7 +50,41 @@ class _QuizScreenState extends State<QuizScreen> {
             style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8.0),
-          buildQuestion(),
+          Text(
+              currentQuestion.stem,
+              style: const TextStyle(fontSize: 18.0)
+          ),
+          if(currentQuestion is MulChoice)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List<Widget>.generate(currentQuestion.options.length, (index) {
+                final option = currentQuestion.options[index];
+                return ListTile(
+                  contentPadding: const EdgeInsets.all(0),
+                  leading: Radio<int>(
+                    value: index,
+                    groupValue: currentQuestion.selectedOptionIndex,
+                    onChanged: (int? value) {
+                      setState(() {
+                        currentQuestion.selectedOptionIndex = value!;
+                      });
+                    },
+                  ),
+                  title: Text(option),
+                );
+              }),
+            ),
+          if(currentQuestion is FillIn)
+            TextField(
+              onChanged: (value){
+                setState(() {
+                  currentQuestion.filledAnswer = value;
+                });
+              },
+              decoration: const InputDecoration(
+              labelText: 'Answer',
+              ),
+            ),
           const SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,6 +102,14 @@ class _QuizScreenState extends State<QuizScreen> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
+                      if (currentQuestion.checkAnswer()) {
+                        correctAnswers++;
+                      } else if (!wrongQuestions.contains(currentQuestion) && currentQuestion.checkAnswer() == false) {
+                        if(correctAnswers > 0){
+                          correctAnswers--;
+                        }
+                        wrongQuestions.add(currentQuestion);
+                      }
                       currentIndex++;
                     });
                   },
@@ -128,6 +118,14 @@ class _QuizScreenState extends State<QuizScreen> {
               if (currentIndex == widget.randomQuiz.length - 1)
                 ElevatedButton(
                   onPressed: () {
+                    if (currentQuestion.checkAnswer()) {
+                      correctAnswers++;
+                    } else if (!wrongQuestions.contains(currentQuestion) && currentQuestion.checkAnswer() == false) {
+                      if(correctAnswers > 0){
+                        correctAnswers--;
+                      }
+                      wrongQuestions.add(currentQuestion);
+                    }
                     double grade = (correctAnswers / widget.randomQuiz.length) * 100;
                     Navigator.push(
                       context,
