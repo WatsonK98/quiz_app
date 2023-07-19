@@ -5,6 +5,5 @@ abstract class Question {
 
   Question(this.type, this.stem, this.answer);
 
-  void display();
-  bool checkAnswer(var userIn);
+  bool checkAnswer();
 }

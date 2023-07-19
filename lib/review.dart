@@ -1,6 +1,5 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:highlight_text/highlight_text.dart';
-import 'package:quiz_me/loading.dart';
 
 class Review extends StatelessWidget{
   final dynamic wrongQuestions;
@@ -37,26 +36,66 @@ class ReviewScreen extends StatefulWidget{
 }
 
 class _ReviewScreenState extends State<ReviewScreen>{
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final currentQuestion = widget.wrongQuestions[currentIndex];
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8.0),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-
-            },
-            child: const Text('Go Back'),
+          Text(
+            'Question ${currentIndex + 1}',
+            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
+          const SizedBox(height: 8.0),
+          Text(
+              currentQuestion.stem,
+              style: const TextStyle(fontSize: 16.0)
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            currentQuestion.answer.toString(),
+            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (currentIndex > 0)
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        currentIndex--;
+                      });
+                    },
+                    child: const Text('Previous')
+                ),
+              if (currentIndex < widget.wrongQuestions.length - 1)
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        currentIndex++;
+                      });
+                    },
+                    child: const Text('Next')
+                ),
+              if(currentIndex == widget.wrongQuestions.length - 1)
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        exit(0);
+                      });
+                    },
+                    child: const Text('End Session')
+                ),
+            ],
+          )
         ],
       ),
     );
   }
-
 }
