@@ -43,7 +43,9 @@ class _QuizScreenState extends State<QuizScreen> {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(currentQuestion.stem),
+          Text(currentQuestion.stem,
+            style: const TextStyle(fontSize: 16.0),
+          ),
           ListView.builder(
             shrinkWrap: true,
             itemCount: currentQuestion.options.length,
