@@ -87,6 +87,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
               'version 1.0.0',
               style: TextStyle(fontSize: 10),
             ),
+            //Field for username
             TextFormField(
               key: _usernameFormFieldKey,
               decoration: const InputDecoration(
@@ -96,6 +97,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
               validator: (value) =>
               _notEmpty(value!) ? null : 'Username is required',
             ),
+            //field for password
             TextFormField(
               key: _passwordFormFieldKey,
               obscureText: true,
@@ -118,6 +120,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                         var username = values['username'];
                         var password = values['password'];
                         validateLogin(username, password).then((jsonResponse) {
+                          //if true then save the credentials and move on
                           if (jsonResponse['response'] == true) {
                             saveCredentials(username, password);
                             Navigator.push(
@@ -126,6 +129,8 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                                 builder: (context) => Loading(values),
                               ),
                             );
+                            //login failed otherwise
+                            //let user know
                           } else {
                             showDialog(
                                 context: context,
@@ -157,6 +162,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
                 ],
               );
             }),
+            //Let user know where the credentials must come from
             const Text(
               '*User name of your primary email address provided by UTEP.',
               style: TextStyle(fontSize: 10),
@@ -171,6 +177,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
     );
   }
 
+  //Validates the login credentials given by the user
   Future<dynamic> validateLogin(var username, var password) async{
     var url = 'https://www.cs.utep.edu/cheon/cs4381/homework/quiz/login.php?user=$username&pin=$password';
     var response = await http.get(Uri.parse(url));
@@ -179,6 +186,7 @@ class _QuizAppLogin extends State<QuizAppLogin> {
   }
 }
 
+///Necessary class that overrides credential necessities by the web service
 class MyHttpOverrides extends HttpOverrides{
   @override
   HttpClient createHttpClient(SecurityContext? context){
