@@ -28,9 +28,11 @@ class Loading extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            ///Must be future
             FutureBuilder <dynamic>(
               future: loadQuiz(values['username'], values['password'], '01'),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                //While the future is waiting it shows progress and let's user know
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -39,13 +41,14 @@ class Loading extends StatelessWidget{
                         color: Colors.green,
                       ),
                       Text(
+                        //lets user know
                         'Loading Quizzes',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                       ),
                     ],
                   );
                 }
-
+                //Once all things are completed the app moves on
                 if (snapshot.hasData) {
                   Timer(const Duration(seconds: 2), () {
                     Navigator.push(
@@ -58,6 +61,7 @@ class Loading extends StatelessWidget{
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        //Lets the user know the app is ready to move on
                         const Icon(
                           Icons.check_circle_outline,
                           color: Colors.green,
@@ -80,10 +84,12 @@ class Loading extends StatelessWidget{
     );
   }
 
+  ///Loads the quiz from the web
   Future loadQuiz(var username, var password, var quiz) async{
     var response = await http.get(Uri.parse('https://www.cs.utep.edu/cheon/cs4381/homework/quiz/get.php?user=$username&pin=$password&quiz=quiz$quiz'));
     var decoded = json.decode(response.body);
 
+    //Looks for every quiz available and loads a quiz object
     while (decoded['response'] == true) {
       for (int i = 0; i < decoded['quiz']['question'].length; i++) {
         currentQuestion = decoded['quiz']['question'][i];

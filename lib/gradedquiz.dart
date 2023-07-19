@@ -11,8 +11,9 @@ class GradedQuiz extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-
+    //Timer to move onto the review
     Timer(const Duration(seconds: 2), () async {
+      //grade is less than 100 then the review is necessary
       if(grade < 100){
         Navigator.push(
           context,
@@ -20,6 +21,7 @@ class GradedQuiz extends StatelessWidget{
             builder: (context) => Review(wrongQuestions),
           ),
         );
+        //if scored 100 the review is not necessary
       } else {
         await Restart.restartApp();
       }
@@ -34,11 +36,13 @@ class GradedQuiz extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            //displays the grade
             if (grade < 100)
               Text(
                 'Grade: $grade',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
+            //congratulates the user
             if (grade == 100)
               Text(
                 'Grade: $grade\n Good Job!',
